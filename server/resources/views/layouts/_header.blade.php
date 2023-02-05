@@ -6,12 +6,7 @@
         viewBox="0 0 24 24">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
       </svg>
-      <span class="ml-3 text-xl">BookManagement</span>
+      <span class="ml-3 text-xl">FlightReservation</span>
     </a>
-    <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-      <a href="/" class="mr-5 hover:text-gray-900">図書</a>
-      <a href="{{ url('user') }}" class="mr-5 hover:text-gray-900">ユーザ</a>
-      <a href="{{ url('rental') }}" class="mr-5 hover:text-gray-900">貸出</a>
-    </nav>
   </div>
 </header>
