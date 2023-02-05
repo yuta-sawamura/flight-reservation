@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('content')
-@if (session('message'))
-@include('components.alert', ['message' => e(session('message'))])
-@endif
 
 <div class="container mx-auto px-4 sm:px-8">
   <div class="py-8">
@@ -35,28 +32,25 @@
             </tr>
           </thead>
           <tbody>
+            @foreach ($reservations as $reservation)
             <tr>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  hoge
+                  {{ $reservation->getSeatClass() }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  fuga
+                  {{ $reservation->customer->id }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  hoge
-                </p>
-              </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <p class="text-gray-900 whitespace-no-wrap">
-                  fuga
+                  {{ $reservation->customer->customer_name }}
                 </p>
               </td>
             </tr>
+            @endforeach
           </tbody>
         </table>
       </div>
