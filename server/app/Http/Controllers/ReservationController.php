@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Customer;
-use Illuminate\Support\Facades\DB;
+use App\Models\Reservation;
+use App\Models\Flight;
 
-class CustomerController extends Controller
+class ReservationController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        // $books = Book::where('name', 'LIKE', "%{$request->keyword}%")
-        //     ->orderBy('id', 'desc')
-        //     ->get();
+        $flights = Flight::where("flight_name", "RAC861")
+            ->get();
+        $reservations = Reservation::whereBelongsTo($flights)
+            ->where("year", "2023")
+            ->where("month", "3")
+            ->where("day", "1")
+            ->get();
 
-        // return view('book.index')->with([
-        //     'books' => $books,
-        //     'keyword' => $request->keyword,
-        // ]);
-        return view('customer.index');
+        return view('reservation.index')->with([
+            'reservations' => $reservations,
+        ]);
     }
 
     // public function create()
