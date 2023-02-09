@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Flight;
 
 class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::all();
+        $flights = Flight::where("flight_name", "RAC861")
+            ->get();
+        $reservations = Reservation::whereBelongsTo($flights)
+            ->where("year", "2023")
+            ->where("month", "3")
+            ->where("day", "1")
+            ->get();
+
         return view('reservation.index')->with([
             'reservations' => $reservations,
         ]);

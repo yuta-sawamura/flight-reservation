@@ -13,6 +13,11 @@ class Reservation extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function flight()
+    {
+        return $this->belongsTo(Flight::class);
+    }
+
     public function getSeatClass(): string
     {
         if ($this->seat_class === 0) return "ビジネス";
