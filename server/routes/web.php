@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('flight22007/page1', 'App\Http\Controllers\ReservationController@page1');
 Route::get('flight22007/page2', 'App\Http\Controllers\ReservationController@page2');
+Route::get('flight22007/page3', 'App\Http\Controllers\ReservationController@page3');
