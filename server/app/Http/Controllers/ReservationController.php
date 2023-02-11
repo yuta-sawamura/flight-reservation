@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Flight;
+use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    public function index()
+    public function page1()
     {
         $flights = Flight::where("flight_name", "RAC861")
             ->get();
@@ -17,76 +18,43 @@ class ReservationController extends Controller
             ->where("day", "1")
             ->get();
 
-        return view('reservation.index')->with([
+        return view('reservation.page1')->with([
             'reservations' => $reservations,
         ]);
     }
 
-    // public function create()
-    // {
-    //     return view('book.create');
-    // }
+    public function page2(Request $request)
+    {
+        $params = $request->query();
 
-    // public function store(Request $request)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $book = new Book;
-    //         $book->fill($request->all())->save();
+        if (isset($params["flight_name"])) {
+            $flights = Flight::where("flight_name", $params["flight_name"])
+                ->get();
+        } else {
+            $flights = Flight::get();
+        }
 
-    //         $book_history = new BookHistory;
-    //         $book_history->fill($request->all());
-    //         $book_history->book_id = $book->id;
-    //         $book_history->save();
+        if ($flights->isNotEmpty()) {
+            $reservations = Reservation::whereBelongsTo($flights);
+            if (isset($params["year"])) {
+                $reservations->where("year", $params["year"]);
+            }
 
-    //         DB::commit();
-    //     } catch (\Exception $e) {
-    //         DB::rollback();
-    //     }
+            if (isset($params["month"])) {
+                $reservations->where("month", $params["month"]);
+            }
 
-    //     return redirect('/')->with('message', '図書を登録しました');
-    // }
+            if (isset($params["day"])) {
+                $reservations->where("day", $params["day"]);
+            }
+            $reservations = $reservations->get();
+        } else {
+            $reservations = [];
+        }
 
-    // public function edit(Book $book)
-    // {
-    //     return view('book.edit')->with(
-    //         ['book' => $book]
-    //     );
-    // }
-
-    // public function update(Request $request, Book $book)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $book->fill($request->all())->save();
-
-    //         $book_history = new BookHistory;
-    //         $book_history->fill($request->all());
-    //         $book_history->book_id = $book->id;
-    //         $book_history->save();
-
-    //         DB::commit();
-    //     } catch (\Exception $e) {
-    //         DB::rollback();
-    //     }
-
-    //     return redirect('/')->with('message', '図書を編集しました');
-    // }
-
-    // public function destroy(Book $book)
-    // {
-    //     $book->delete();
-    //     return redirect('/')->with('message', '図書を削除しました');
-    // }
-
-    // public function history(Book $book)
-    // {
-    //     $book_histories = BookHistory::where('book_id', $book->id)
-    //         ->orderBy('id', 'desc')
-    //         ->get();
-
-    //     return view('book.history')->with([
-    //         'book_histories' => $book_histories,
-    //     ]);
-    // }
+        return view('reservation.page2')->with([
+            'reservations' => $reservations,
+            'params' => $params,
+        ]);
+    }
 }
