@@ -57,4 +57,20 @@ class ReservationController extends Controller
             'params' => $params,
         ]);
     }
+
+    public function page3()
+    {
+        $flights = Flight::where("departure_place", "那覇")
+            ->where("arrival_place", "南大東")
+            ->get();
+        $reservations = Reservation::whereBelongsTo($flights)
+            ->where("year", "2023")
+            ->where("month", "3")
+            ->where("day", "2")
+            ->get();
+
+        return view('reservation.page3')->with([
+            'reservations' => $reservations,
+        ]);
+    }
 }
