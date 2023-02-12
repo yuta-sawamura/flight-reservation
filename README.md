@@ -1,4 +1,4 @@
-# book-management
+# flight-reservation
 
 神戸情報大学院大学の課題用のアプリケーション
 
