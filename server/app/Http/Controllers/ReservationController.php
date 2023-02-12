@@ -73,4 +73,41 @@ class ReservationController extends Controller
             'reservations' => $reservations,
         ]);
     }
+
+    public function page4(Request $request)
+    {
+        $params = $request->query();
+        \DB::enableQueryLog();
+        if (isset($params["departure_place"]) && isset($params["arrival_place"])) {
+            $flights = Flight::where("departure_place", $params["departure_place"])
+                ->where("arrival_place", $params["departure_place"])
+                ->get();
+        } else {
+            $flights = Flight::get();
+        }
+
+        if ($flights->isNotEmpty()) {
+            $reservations = Reservation::whereBelongsTo($flights);
+            if (isset($params["year"])) {
+                $reservations->where("year", $params["year"]);
+            }
+
+            if (isset($params["month"])) {
+                $reservations->where("month", $params["month"]);
+            }
+
+            if (isset($params["day"])) {
+                $reservations->where("day", $params["day"]);
+            }
+            $reservations = $reservations->groupBy("flight_id")->get();
+        } else {
+            $reservations = [];
+        }
+        //dd(\DB::getQueryLog());
+
+        return view('reservation.page4')->with([
+            'reservations' => $reservations,
+            'params' => $params,
+        ]);
+    }
 }
