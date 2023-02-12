@@ -9,9 +9,9 @@
       </h2>
     </div>
     <div>
-      <h3>日付：{{ $reservations[0]->year }}年{{ $reservations[0]->month }}月{{ $reservations[0]->day }}日</h3>
-      <h3>出発地：{{ $reservations[0]->flight->departure_place }}</h3>
-      <h3>到着地：{{ $reservations[0]->flight->arrival_place }}</h3>
+      <h3>2023年3月2日</h3>
+      <h3>出発地：那覇</h3>
+      <h3>到着地：南大東</h3>
     </div>
     <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
       <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -37,26 +37,26 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($reservations as $reservation)
+            @foreach ($flights as $flight)
             <tr>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{ $reservation->flight->flight_name }}
+                  {{ $flight->flight_name }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{ $reservation->flight->time }}
+                  {{ $flight->time }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{ $reservation->flight->getCapBusiness() }}
+                  {{ $flight->convertIconByBusiness() }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{ $reservation->flight->getCapEconomy() }}
+                  {{ $flight->convertIconByEconomy() }}
                 </p>
               </td>
             </tr>

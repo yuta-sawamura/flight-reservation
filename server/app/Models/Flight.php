@@ -8,17 +8,17 @@ class Flight extends Model
 {
     protected $fillable = ["flight_name", "departure_place", "arrival_place", "time", "cap_business", "cap_economy"];
 
-    public function getCapBusiness(): string
+    public function convertIconByBusiness(): string
     {
-        if ($this->cap_business >= 2) return "○";
-        if ($this->cap_business === 1) return "△";
+        if ($this->business_seat_count >= 2) return "○";
+        if ($this->business_seat_count === 1) return "△";
         return "×";
     }
 
-    public function getCapEconomy(): string
+    public function convertIconByEconomy(): string
     {
-        if ($this->cap_economy >= 5) return "○";
-        if ($this->cap_economy >= 1 && $this->cap_economy <= 4) {
+        if ($this->economy_seat_count >= 5) return "○";
+        if ($this->economy_seat_count >= 1 && $this->economy_seat_count <= 4) {
             return "△";
         }
         return "×";
