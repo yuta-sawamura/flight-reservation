@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Flight;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -63,15 +64,65 @@ class ReservationController extends Controller
         $flights = Flight::where("departure_place", "那覇")
             ->where("arrival_place", "南大東")
             ->get();
-        $reservations = Reservation::whereBelongsTo($flights)
+
+        $flight_ids = $this->getFlightIds($flights);
+        $business = $this->getBusinessClass($flight_ids);
+        $economy = $this->getEconomyClass($flight_ids);
+
+        foreach ($flights as $flight) {
+            foreach ($business as $v) {
+                if ($flight->id === $v->flight_id) {
+                    $flight["business_seat_count"] = $flight->cap_business - $v->count;
+                }
+            }
+            foreach ($economy as $v) {
+                if ($flight->id === $v->flight_id) {
+                    $flight["economy_seat_count"] = $flight->cap_economy - $v->count;
+                }
+            }
+        }
+
+        return view('reservation.page3')->with([
+            'flights' => $flights,
+        ]);
+    }
+
+    private function getFlightIds(\Illuminate\Database\Eloquent\Collection $flights): array
+    {
+        $flight_ids = [];
+        foreach ($flights as $flight) {
+            array_push($flight_ids, $flight->id);
+        }
+
+        return $flight_ids;
+    }
+
+    private function getBusinessClass(array $flight_ids): \Illuminate\Support\Collection
+    {
+        return DB::table("reservations")
+            ->select('flight_id')
+            ->selectRaw('COUNT(flight_id) AS count')
+            ->whereIn("flight_id", $flight_ids)
             ->where("year", "2023")
             ->where("month", "3")
             ->where("day", "2")
+            ->where("seat_class", 0)
+            ->groupBy("flight_id")
             ->get();
+    }
 
-        return view('reservation.page3')->with([
-            'reservations' => $reservations,
-        ]);
+    private function getEconomyClass(array $flight_ids): \Illuminate\Support\Collection
+    {
+        return DB::table("reservations")
+            ->select('flight_id')
+            ->selectRaw('COUNT(flight_id) AS count')
+            ->whereIn("flight_id", $flight_ids)
+            ->where("year", "2023")
+            ->where("month", "3")
+            ->where("day", "2")
+            ->where("seat_class", 1)
+            ->groupBy("flight_id")
+            ->get();
     }
 
     public function page4(Request $request)
